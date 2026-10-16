@@ -1,4 +1,4 @@
-# Workplace Safety Monitoring and Alert System
+Detection of harassment
 
 This web application is a prototype designed to monitor webcam frames and identify potential distress indicators using Computer Vision and Deep Learning techniques. It uses DeepFace to analyze two facial attributes:
 
