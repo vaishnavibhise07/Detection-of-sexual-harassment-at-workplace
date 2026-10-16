@@ -23,6 +23,9 @@ When the risk score exceeds the configured threshold, the system captures an ima
 
 A web interface displays live detection results, risk indicators, and an HR dashboard prototype for reviewing incident evidence.
 
+
+<img width="1139" height="482" alt="WhatsApp Image 2026-10-16 at 1 34 13 PM" src="https://github.com/user-attachments/assets/d39f4d08-e125-4bad-85fd-db7667bec6ce" />
+
 ### Technologies Used
 
 - **Python & FastAPI:** Backend development and API endpoints.
