@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SENTINAL | Live Monitor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-zinc-950 text-white">
+  <header class="flex items-center justify-between border-b border-zinc-800 px-6 py-4">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight text-rose-500">SENTINAL</h1>
+      <p class="text-xs text-zinc-400">Workplace safety monitoring prototype</p>
+    </div>
+    <a href="/dashboard" class="rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800">View evidence dashboard</a>
+  </header>
+
+  <main class="mx-auto grid max-w-7xl gap-6 p-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900 p-4">
+      <h2 class="mb-4 text-lg font-semibold">Live camera feed</h2>
+      <div class="overflow-hidden rounded-xl bg-black">
+        <img src="/video_feed" alt="Live webcam feed" class="aspect-video w-full object-contain">
+      </div>
+      <p class="mt-3 text-xs leading-5 text-zinc-400">The camera feed requires a locally connected webcam and permission to access it.</p>
+    </section>
+
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+      <h2 class="mb-1 text-lg font-semibold">Detection summary</h2>
+      <p class="mb-8 text-xs text-zinc-400">Updates while the camera feed is running</p>
+      <dl class="space-y-5">
+        <div class="flex justify-between gap-4 border-b border-zinc-800 pb-4"><dt class="text-zinc-400">Status</dt><dd id="human" class="font-semibold">WAITING</dd></div>
+        <div class="flex justify-between gap-4 border-b border-zinc-800 pb-4"><dt class="text-zinc-400">Predicted gender</dt><dd id="gender">---</dd></div>
+        <div class="flex justify-between gap-4 border-b border-zinc-800 pb-4"><dt class="text-zinc-400">Predicted emotion</dt><dd id="emotion">---</dd></div>
+        <div class="border-b border-zinc-800 pb-4">
+          <div class="mb-2 flex justify-between"><dt class="text-zinc-400">Demo risk score</dt><dd id="risk" class="font-bold">0%</dd></div>
+          <div class="h-2 rounded-full bg-zinc-800"><div id="bar" class="h-2 rounded-full bg-emerald-500" style="width:0%"></div></div>
+        </div>
+      </dl>
+      <p class="mt-6 rounded-lg border border-amber-900/70 bg-amber-950/40 p-3 text-xs leading-5 text-amber-200">Important: emotion-based scores are illustrative only. They do not establish harassment, danger, or a person's actual emotional state.</p>
+    </section>
+  </main>
+
+  <script>
+    async function refreshStats() {
+      try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        document.getElementById('human').textContent = data.human;
+        document.getElementById('gender').textContent = data.gender;
+        document.getElementById('emotion').textContent = data.emotion;
+        document.getElementById('risk').textContent = `${data.risk}%`;
+        document.getElementById('bar').style.width = `${Math.max(0, Math.min(100, data.risk))}%`;
+        document.getElementById('bar').className = `h-2 rounded-full ${data.risk > 70 ? 'bg-rose-500' : 'bg-emerald-500'}`;
+      } catch (error) {
+        document.getElementById('human').textContent = 'API unavailable';
+      }
+    }
+    setInterval(refreshStats, 1000);
+    refreshStats();
+  </script>
+</body>
+</html>
